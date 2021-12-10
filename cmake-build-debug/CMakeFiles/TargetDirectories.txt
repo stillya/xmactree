@@ -1,0 +1,3 @@
+/Users/stillya/code/stilya/xmactree/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/stillya/code/stilya/xmactree/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/stillya/code/stilya/xmactree/cmake-build-debug/CMakeFiles/xmactree.dir

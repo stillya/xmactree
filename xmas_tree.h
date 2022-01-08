@@ -25,9 +25,6 @@ static const u_int ABSOLUTE_PADDING_TOP = 10;
 
 void drawTree(char* text);
 
-internal void drawWood(u_int maxLength, u_int height);
-
-internal int getHeightOfTreeOnText(size_t count);
+internal void drawWood(u_int height);
 
 internal COLORS getRandomColor();
-

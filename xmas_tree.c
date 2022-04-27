@@ -1,7 +1,6 @@
 #include <string.h>
 #include "xmas_tree.h"
 
-
 void drawTree(char *text) {
 
     u_int contentLength = strlen(text);

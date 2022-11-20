@@ -7,13 +7,20 @@ static char *TEXT = NULL;
 
 void initText();
 
-void sanitizeText(char** data);
+void sanitizeText(char **data);
+
+void hideCursor();
+
+void showCursor();
+
+void catchExit(int sig);
 
 int main(int argc, char *argv[]) {
-
     initText();
-
-    printf("\e[?25l");
+    hideCursor();
+    signal(SIGINT, catchExit);
+    signal(SIGTSTP, catchExit);
+    signal(SIGTERM, catchExit);
 
     while (1) {
         for (int i = 0; i < ABSOLUTE_PADDING_TOP; i++) {
@@ -55,4 +62,19 @@ void sanitizeText(char **data) {
     text[count] = '\0';
     count++;
     *data = realloc(*data, count);
+}
+
+// catch sigint, sigterm and sigtstp
+void catchExit(int sig) {
+    showCursor();
+    exit(0);
+}
+
+void hideCursor() {
+    printf("\e[?25l");
+}
+
+void showCursor() {
+    printf("\e[?25h");
+    fflush(stdout);
 }

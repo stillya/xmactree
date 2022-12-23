@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include "xmas_tree.h"
 
-static char *TEXT = NULL;
+static char* TEXT = NULL;
 
 void initText();
 
@@ -15,7 +15,7 @@ void showCursor();
 
 void catchExit(int sig);
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     initText();
     hideCursor();
     signal(SIGINT, catchExit);
@@ -36,7 +36,7 @@ void initText() {
     if (isatty(STDIN_FILENO)) {
         TEXT = "********************************************************";
     } else {
-        FILE *f = stdin;
+        FILE* f = stdin;
         fseek(f, 0, SEEK_END);
         long fsize = ftell(f);
         fseek(f, 0, SEEK_SET);
@@ -50,8 +50,8 @@ void initText() {
     }
 }
 
-void sanitizeText(char **data) {
-    char *text = *data;
+void sanitizeText(char** data) {
+    char* text = *data;
     int count = 0;
 
     for (int i = 0; text[i]; i++) {

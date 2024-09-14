@@ -1,42 +1,41 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "xmas_tree.h"
+#include <xmas_tree.h>
+
+
+static void init_text(FILE* input);
+static char* sanitize_text(char* text);
+static void hide_cursor();
+static void show_cursor();
+static void catch_exit(int sig);
 
 static char* TEXT = NULL;
 
-void initText();
-
-void sanitizeText(char **data);
-
-void hideCursor();
-
-void showCursor();
-
-void catchExit(int sig);
-
 int main(int argc, char* argv[]) {
-    initText();
-    hideCursor();
-    signal(SIGINT, catchExit);
-    signal(SIGTSTP, catchExit);
-    signal(SIGTERM, catchExit);
+    init_text(stdin);
+    hide_cursor();
+    signal(SIGINT, catch_exit);
+    signal(SIGTSTP, catch_exit);
+    signal(SIGTERM, catch_exit);
 
     while (1) {
         for (int i = 0; i < ABSOLUTE_PADDING_TOP; i++) {
             printf("\n");
         }
-        drawTree(TEXT);
+        draw_tree(TEXT);
         usleep(150000);
         system("clear");
     }
+
+    return 0;
 }
 
-void initText() {
+static void init_text(FILE* input) {
     if (isatty(STDIN_FILENO)) {
         TEXT = "********************************************************";
     } else {
-        FILE* f = stdin;
+        FILE* f = input;
         fseek(f, 0, SEEK_END);
         long fsize = ftell(f);
         fseek(f, 0, SEEK_SET);
@@ -46,12 +45,11 @@ void initText() {
         fclose(f);
 
         TEXT[fsize] = '\0';
-        sanitizeText(&TEXT);
+        TEXT = sanitize_text(TEXT);
     }
 }
 
-void sanitizeText(char** data) {
-    char* text = *data;
+static char* sanitize_text(char* text) {
     int count = 0;
 
     for (int i = 0; text[i]; i++) {
@@ -59,22 +57,27 @@ void sanitizeText(char** data) {
             text[count++] = text[i];
         }
     }
-    text[count] = '\0';
-    count++;
-    *data = realloc(*data, count);
+    text[count++] = '\0';
+    char* ntext = realloc(text, count);
+    if (!ntext) {
+        printf("Error reallocating memory\n");
+        exit(1);
+    }
+
+    return ntext;
 }
 
-// catch sigint, sigterm and sigtstp
-void catchExit(int sig) {
-    showCursor();
+/* catch sigint, sigterm and sigtstp */
+static void catch_exit(int sig) {
+    show_cursor();
     exit(0);
 }
 
-void hideCursor() {
+static void hide_cursor() {
     printf("\e[?25l");
 }
 
-void showCursor() {
+static void show_cursor() {
     printf("\e[?25h");
     fflush(stdout);
 }
